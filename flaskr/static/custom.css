@@ -1,20 +1,52 @@
-/* .btn-primary { 
-    background-color: darkgreen;
-    border-color: chartreuse;
+/* custom.css */
+
+.custom-primary-btn {
+    color: green; 
+    background-color: white;
+    border-color: green; 
 }
 
-.btn-outline-primary { 
-    background-color: darkgreen;
-    border-color: darkgreen;
+.custom-primary-btn:hover {
+    color: white; 
+    background-color: green; 
+    border-color: green; 
 }
 
-btn-outline-primary me-2
-.btn-primary:hover {
-    background-color: darkgreen;
-    border-color: darkolivegreen;
+.custom-primary-btn:focus {
+    color: white !important; 
+    background-color: green; 
+    border-color: green; 
+    outline: none !important; 
 }
 
-/* .nav-link {
-    background-color: darkgreen;
+:root {
+    --bs-btn-active-bg: green; 
+}
 
-}  */
+
+.nav-link {
+    color: green !important; 
+}
+
+.custom-primary-btn a {
+    color: inherit; 
+    text-decoration: none; 
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+    border-color: green !important; 
+    box-shadow: 0 0 0 0.25rem rgba(0, 128, 0, 0.25) !important; 
+}
+
+/* Custom CSS to style the form */
+.form-group {
+    margin-bottom: 20px;
+    
+  }
+  label{margin-left: 20px;} 
+      #datepicker1{width:180px;} 
+      #datepicker2{width:180px}
+      #datepicker1 > span:hover{cursor: pointer;}

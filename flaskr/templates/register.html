@@ -98,13 +98,13 @@
         {% endif %}
     </div>
     <div class="col-12">
-      {{ form.submit(class="btn btn-outline-primary") }}
+      {{ form.submit(class="btn custom-primary-btn") }}
     </div>
   </form>
   <br>
   <div class="border-bottom">
     <small class="text-muted">
-        Already have an account? <a class="ml-2" href="{{ url_for('login') }}"> Sign In </a>
+        Already have an account? <a class="nav-link px-2" href="{{ url_for('login') }}"> Sign In </a>
     </small>
 </div>
 {% endblock content %}
