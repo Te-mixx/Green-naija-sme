@@ -28,29 +28,29 @@
       <div class="form-group row" id="motorVehicle">    
         <div class="col">   
           <label for="car_diesel">Motor Vehicle (litres)</label>
-          <input type="text" class="form-control" id="motor_vehicle" name="motor_vehicle" >
+          <input type="text" class="form-control" id="motorVehicle_litres" name="motor_vehicle" >
         </div>
         <div class="col">
           <label for="fuelType">Select Fuel Type:</label>
-          <select id="vehicleFuelType" class="form-select" aria-label="Default select example">
+          <select id="motorVehicle_FuelType" class="form-select" aria-label="Default select example">
             <option selected value="petrol">Petrol</option>
             <option value="diesel">Diesel</option>
           </select>
         </div>
         <div class="col">
           <label for="fuel_price">Total Cost (Naira)</label>
-          <input type="text" class="form-control" id="motor_price" name="motor_price">
+          <input type="text" class="form-control" id="motorVehicle_price" name="motorVehicle_price">
         </div>
       </div>
       <button type="button" onclick="addInput('motorVehicle')">Add More Motor Vehicles</button>
       <div class="form-group row" id="motorbike">
         <div class="col">
           <label for="motorbike">Motorbike (litres)</label>
-          <input type="text" class="form-control" id="motorbike_value" name="motorbike">
+          <input type="text" class="form-control" id="motorbike_litres" name="motorbike">
         </div>
         <div class="col">
           <label for="fuelType">Select Fuel Type:</label>
-          <select id="motorbikeFuelType" class="form-select" aria-label="Default select example">
+          <select id="motorbike_FuelType" class="form-select" aria-label="Default select example">
             <option selected value="petrol">Petrol</option>
             <option value="diesel">Diesel</option>
           </select>
@@ -64,11 +64,11 @@
       <div class="form-group row" id="tricycle">
         <div class="col">
           <label for="tricycle">Tricycle (litres)</label>
-          <input type="text" class="form-control" id="tricycle_value" name="tricycle">
+          <input type="text" class="form-control" id="tricycle_litres" name="tricycle">
         </div>
         <div class="col">
           <label for="fuelType">Select Fuel Type:</label>
-          <select id="tricycleFuelType" class="form-select" aria-label="Default select example">
+          <select id="tricycle_FuelType" class="form-select" aria-label="Default select example">
             <option selected value="petrol">Petrol</option>
             <option value="diesel">Diesel</option>
           </select>
@@ -86,7 +86,7 @@
         </div>
         <div class="col">
           <label for="flight_domestic_price">Total Cost (Naira)</label>
-          <input type="text" class="form-control" id="flight_domestic_price" name="flight_domestic_price">
+          <input type="text" class="form-control" id="flightDomestic_price" name="flight_domestic_price">
         </div>
       </div>
       <div class="form-group row" id="flightInternational">
@@ -96,7 +96,7 @@
         </div>
         <div class="col">
           <label for="flight_international_price">Total Cost (Naira)</label>
-          <input type="text" class="form-control" id="flight_international_price" name="flight_international_price">
+          <input type="text" class="form-control" id="flightInternational_price" name="flight_international_price">
         </div>
       </div>
 
@@ -116,11 +116,11 @@
       <div class="form-group row" id="generator">
         <div class="col">
           <label for="generator">Generator (litres)</label>
-          <input type="text" class="form-control" id="generator_value" name="generator">
+          <input type="text" class="form-control" id="generator_litres" name="generator">
         </div>
         <div class="col">
           <label for="fuelType">Select Fuel Type:</label>
-          <select id="generatorFuelType" class="form-select" aria-label="Default select example">
+          <select id="generator_FuelType" class="form-select" aria-label="Default select example">
             <option selected value="petrol">Petrol</option>
             <option value="diesel">Diesel</option>
           </select>
@@ -207,18 +207,19 @@ async function submitForm(event) {
                     dynamicContainers.push(container);
                 }
             }
+            
             var allContainers = [...normalContainers, ...dynamicContainers];
-
-
+            
             allContainers.forEach(container => {
                 var inputs = serializeInputs(container.id);
-                formData[field].push(...inputs);
+                if (Object.keys(inputs).length !== 0) { // Check if inputs are not empty
+                    formData[field].push(inputs);
+                }
             });
         });
 
         var jsonData = JSON.stringify(formData);
         console.log(formData)
-
         const response = await fetch('/submit', {
             method: 'POST',
             headers: {
@@ -235,21 +236,26 @@ async function submitForm(event) {
     }
 }
 
+
 function serializeInputs(containerId) {
     var container = document.getElementById(containerId);
     var inputs = container.querySelectorAll('input, select');
-    var values = [];
+    var categoryData = {};
 
     inputs.forEach(input => {
-        var inputValues = {
-            id: input.id,
-            value: input.value
-        };
-        values.push(inputValues);
+        // Extract category, attribute, and index from input id
+        var [category, attribute] = input.id.split('_');
+        // If categoryData[category] doesn't exist yet, create it
+        if (!categoryData[category]) {
+            categoryData[category] = {};
+        }
+        // Set value for attribute
+        categoryData[category][attribute] = input.value;
     });
 
-    return values;
+    return categoryData;
 }
+
 
 $(function () { 
     $("#datepicker1").datepicker({  
