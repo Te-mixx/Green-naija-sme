@@ -228,9 +228,16 @@ async function submitForm(event) {
             body: jsonData
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to send data to server');
-        }
+          if (response.ok) {
+      const redirectUrl = response.headers.get('Location') || '/result';
+  
+      setTimeout(() => {
+          window.location.href = redirectUrl;
+      }, 1000);
+  } else {
+    throw new Error('Failed to send data to server');
+}
+
     } catch (error) {
         console.error('Error:', error);
     }
@@ -243,13 +250,13 @@ function serializeInputs(containerId) {
     var categoryData = {};
 
     inputs.forEach(input => {
-        // Extract category, attribute, and index from input id
+        
         var [category, attribute] = input.id.split('_');
-        // If categoryData[category] doesn't exist yet, create it
+        
         if (!categoryData[category]) {
             categoryData[category] = {};
         }
-        // Set value for attribute
+        
         categoryData[category][attribute] = input.value;
     });
 
