@@ -1,7 +1,7 @@
 import json
 from flaskr.models import User, Report
 from flaskr import app, db, bcrypt, mail
-from flask import render_template, url_for, redirect, flash
+from flask import render_template, session, url_for, redirect, flash
 from flaskr.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
 from flask import request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
@@ -69,40 +69,78 @@ def login():
 def submit():
     data = request.json
     results = {}
+    category_labels = []
+    category_emissions = []
+    total_prices = []
+    
     for category, category_data in data.items():
-        total_emissions, total_price = calculate_emissions(category_data)
+        labels, category_values, total_price = calculate_emissions(category_data)
+        
+        category_labels.extend(labels)
+        category_emissions.append(sum(category_values))  # Calculate total emissions for the category
+        total_prices.append(total_price)
+
         results[category] = {
-            'emissions': total_emissions,
+            'emissions': category_values,
             'total_price': total_price
         }
     
-    return jsonify(results)
+    total_price = int(sum(total_prices))
+    emission_total = sum(category_emissions)
+    total_emission = float(emission_total)
+
+    # Store processed data in session variables
+    session['category_labels'] = category_labels
+    session['category_emissions'] = category_emissions
+    session['total_price'] = total_price
+    session['total_emission'] = total_emission
+    
+    return redirect(url_for('result'))
+
 # the function handles dynamic input form correctly 
 def calculate_emissions(category_data):
-    total_emissions = 0
+    category_emissions = {}
     total_price = 0
     for item in category_data:
         for key, value in item.items():
-            # Check if 'litres' key exists in value dictionary
-            if 'litres' not in value:
-                print(key, value)
-                continue  # Skip this item if 'litres' key is missing
-            litres = float(value.get('litres', 0)) 
-            price = float(value.get('price', 0))  
-            total_price += price
-            if 'FuelType' in value:
-                fuel_type = value['FuelType']
-                if fuel_type in fuel_coefficients:
-                    coefficient = fuel_coefficients[fuel_type]
-                    total_emissions += (litres * coefficient)
+            if 'litres' in value:
+                litres = float(value.get('litres', 0))  # Get 'litres' value or default to 0
+                price = int(value.get('price', 0))  # Get 'price' value or default to 0
+                total_price += price
+                if 'FuelType' in value:
+                    fuel_type = value['FuelType']
+                    if fuel_type in fuel_coefficients:
+                        coefficient = fuel_coefficients[fuel_type]
+                        category_emissions.setdefault(key, 0)
+                        category_emissions[key] += (litres * coefficient)
+                else:
+                    category = key
+                    if category in category_coefficients:
+                        coefficient = category_coefficients[category]
+                        category_emissions.setdefault(key, 0)
+                        category_emissions[key] += (litres * coefficient)
             else:
-                category = key
-                if category in category_coefficients:
-                    coefficient = category_coefficients[category]
-                    total_emissions += (litres * coefficient)
-    return total_emissions, total_price
+                # Multiply the value of each key by their corresponding category coefficients
+                for category_key, category_value in item.items():
+                    if category_key in category_coefficients:
+                        coefficient = category_coefficients[category_key]
+                        total_price += int(category_value['price'])
+                        category_emissions.setdefault(key, 0)
+                        category_emissions[key] += float(category_value['value']) * coefficient
+    
+    category_labels = list(category_emissions.keys())
+    category_values = list(category_emissions.values())
 
+    return category_labels, category_values, total_price
 
+@app.route('/result')
+def result():
+    category_labels = session.get('category_labels', [])
+    category_emissions  = session.get('category_emissions', [])
+    total_price = session.get('total_price', [])
+    total_emission = session.get('total_emission')
+
+    return render_template('result.html', labels=category_labels, data=category_emissions, total_price=total_price, total_emission=total_emission)
 
 @app.route('/calculate', methods=['GET'])
 @login_required
