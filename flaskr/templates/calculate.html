@@ -184,6 +184,10 @@ async function submitForm(event) {
     try {
         event.preventDefault();
 
+
+        // var fromDate = $("#datepicker1").datepicker("getDate");
+        // var toDate = $("#datepicker2").datepicker("getDate");
+
         var formData = {
             motorVehicle: [],
             motorbike: [],
@@ -270,6 +274,11 @@ $(function () {
         todayHighlight: true, 
         todayBtn : "linked",  
     }).datepicker('update', new Date()); 
+
+    $("#datepicker1").on("changeDate", function(e) {
+        var fromDate = e.format();
+        console.log("Selected From Date: " + fromDate);
+    });
 }); 
 
 $(function () { 
@@ -278,6 +287,11 @@ $(function () {
         todayHighlight: true, 
         todayBtn : "linked",  
     }).datepicker('update', new Date()); 
+
+    $("#datepicker2").on("changeDate", function(e) {
+        var toDate = e.format();
+        console.log("Selected To Date: " + toDate);
+    });
 });
 
   </script>
