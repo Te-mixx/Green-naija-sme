@@ -7,15 +7,19 @@ from flask import request, jsonify
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
 
-ELECTRICITY = 0.439
-LPG =1.56
-COAL = 43.03576
-DOMESTIC_FLIGHT = 0.24587
-INTERNATIONAL_FLIGHT = 0.18362
+# Constants for fuel types and corresponding coefficients
+fuel_coefficients = {
+    'petrol': 2.34,
+    'diesel': 2.70
+}
 
-fuel_emmmision_factors = {
-    'petrol': 2.34,  # Default emission factor for petrol
-    'diesel': 2.70  # Default emission factor for diesel
+# Constants for categories
+category_coefficients = {
+    'electricity': 0.439,
+    'lpg': 1.56,
+    'firewood': 43.03576,
+    'flightDomestic': 0.24587,
+    'flightInternational': 0.18362
 }
 
 @app.route("/")
@@ -64,16 +68,40 @@ def login():
 @login_required
 def submit():
     data = request.json
-    motor_vehicle = data.get('motorVehicle', [])
-    motorbike = data.get('motorbike', [])
-    tricycle = data.get('tricycle', [])
-    flight_domestic = data.get('flightDomestic',[])
-    flight_international = data.get('flightInternational')
-    # print('motor vehicle: ', motor_vehicle)    
-    # print('motorbike: ', motorbike)
-    # print('tricycle: ', tricycle)
-    # print('flight domestic: ', flight_domestic)   
-    return jsonify({'message': 'data received!'})
+    results = {}
+    for category, category_data in data.items():
+        total_emissions, total_price = calculate_emissions(category_data)
+        results[category] = {
+            'emissions': total_emissions,
+            'total_price': total_price
+        }
+    
+    return jsonify(results)
+# the function handles dynamic input form correctly 
+def calculate_emissions(category_data):
+    total_emissions = 0
+    total_price = 0
+    for item in category_data:
+        for key, value in item.items():
+            # Check if 'litres' key exists in value dictionary
+            if 'litres' not in value:
+                print(key, value)
+                continue  # Skip this item if 'litres' key is missing
+            litres = float(value.get('litres', 0)) 
+            price = float(value.get('price', 0))  
+            total_price += price
+            if 'FuelType' in value:
+                fuel_type = value['FuelType']
+                if fuel_type in fuel_coefficients:
+                    coefficient = fuel_coefficients[fuel_type]
+                    total_emissions += (litres * coefficient)
+            else:
+                category = key
+                if category in category_coefficients:
+                    coefficient = category_coefficients[category]
+                    total_emissions += (litres * coefficient)
+    return total_emissions, total_price
+
 
 
 @app.route('/calculate', methods=['GET'])
