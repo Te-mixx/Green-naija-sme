@@ -208,6 +208,12 @@ def reset_token(token):
         return redirect(url_for('login'))
     return render_template('reset_token.html', title='Reset Password', form=form)
 
+@app.route("/strategies", methods=['GET'])
+@login_required
+def strategies():
+   
+    return render_template('strategies.html', title='Strategies')
+
 @app.route("/logout")
 def logout():
     logout_user()
