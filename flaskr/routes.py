@@ -139,8 +139,12 @@ def result():
     category_emissions  = session.get('category_emissions', [])
     total_price = session.get('total_price', [])
     total_emission = session.get('total_emission')
+    transportation_emission = sum(category_emissions[:5])
+    energy_emission = sum(category_emissions[-4:])
+    transport_percent = int((transportation_emission / sum(category_emissions)) * 100)
+    energy_percent = int((energy_emission / sum(category_emissions)) * 100)
 
-    return render_template('result.html', labels=category_labels, data=category_emissions, total_price=total_price, total_emission=total_emission)
+    return render_template('result.html', labels=category_labels, data=category_emissions, total_price=total_price, total_emission=total_emission, transportation_emission=transportation_emission, energy_emission=energy_emission, transport_percent=transport_percent, energy_percent=energy_percent)
 
 @app.route('/calculate', methods=['GET'])
 @login_required
