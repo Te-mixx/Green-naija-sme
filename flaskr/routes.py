@@ -112,13 +112,13 @@ def calculate_emissions(category_data):
                     if fuel_type in fuel_coefficients:
                         coefficient = fuel_coefficients[fuel_type]
                         category_emissions.setdefault(key, 0)
-                        category_emissions[key] += (litres * coefficient)
+                        category_emissions[key] += (litres * coefficient) / 1000
                 else:
                     category = key
                     if category in category_coefficients:
                         coefficient = category_coefficients[category]
                         category_emissions.setdefault(key, 0)
-                        category_emissions[key] += (litres * coefficient)
+                        category_emissions[key] += (litres * coefficient) / 1000
             else:
                 # Multiply the value of each key by their corresponding category coefficients
                 for category_key, category_value in item.items():
@@ -126,7 +126,7 @@ def calculate_emissions(category_data):
                         coefficient = category_coefficients[category_key]
                         total_price += int(category_value['price'])
                         category_emissions.setdefault(key, 0)
-                        category_emissions[key] += float(category_value['value']) * coefficient
+                        category_emissions[key] += (float(category_value['value']) * coefficient) / 1000
     
     category_labels = list(category_emissions.keys())
     category_values = list(category_emissions.values())
