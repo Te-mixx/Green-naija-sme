@@ -134,6 +134,7 @@ def calculate_emissions(category_data):
     return category_labels, category_values, total_price
 
 @app.route('/result')
+@login_required
 def result():
     category_labels = session.get('category_labels', [])
     category_emissions  = session.get('category_emissions', [])
