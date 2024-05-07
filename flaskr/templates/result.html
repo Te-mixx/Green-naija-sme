@@ -1,15 +1,18 @@
 {% extends 'base.html' %}
 {% block content%} 
 
-    <div class="container">
-        <h1 class="text-center">Total Consumption Bar Chart</h1>
-        <canvas id="myChart" width="200" height="200"></canvas>
-      </div>
-    
-      <div style="max-width: 600px; margin: auto;" class="container">
-        <h1 class="text-center">Total Consumption Pie Chart</h1>
-        <canvas id="myPieChart"></canvas>
-      </div>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="text-center">Total Consumption Bar Chart</h1>
+            <canvas id="myChart" width="200" height="200"></canvas>
+        </div>
+        <div class="col-md-6">
+            <h1 class="text-center">Total Consumption Pie Chart</h1>
+            <canvas id="myPieChart"></canvas>
+        </div>
+    </div>
+</div>
     
     
       <div style="max-width: 600px; margin: auto;" class="container">
