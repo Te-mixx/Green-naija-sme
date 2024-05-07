@@ -93,7 +93,7 @@ def submit():
     session['category_labels'] = category_labels
     session['category_emissions'] = category_emissions
     session['total_price'] = total_price
-    session['total_emission'] = total_emission
+    session['total_emission'] = round(total_emission, 2)
     
     return redirect(url_for('result'))
 
