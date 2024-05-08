@@ -171,7 +171,7 @@ def account():
 
 def send_reset_mail(user):
     token = user.get_reset_token()
-    msg = Message('Password Reset Request', sender='noreply@ogundeyiboluwatife.com.ng', recipients=[user.email])
+    msg = Message('Password Reset Request', sender='noreply@green9jasme.com.ng', recipients=[user.email])
     msg.body = f'''To reset your password, visit the link below: 
     {url_for('reset_token', token=token, _external=True)}
         If you did not make this request, you can safely ignore this email.
