@@ -15,4 +15,4 @@ login_manager.login_message_category = 'danger'
 mail = Mail(app)
 
 
-from flaskr import routes
+# from flaskr import routes

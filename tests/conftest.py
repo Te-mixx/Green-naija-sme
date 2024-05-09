@@ -1,6 +1,7 @@
 import pytest
 from flaskr import app as myapp, db
 
+
 @pytest.fixture()
 def app():
     # myapp['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
