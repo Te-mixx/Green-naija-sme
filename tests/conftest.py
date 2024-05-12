@@ -10,7 +10,6 @@ def app():
     with app.app_context():
         db.create_all()
 
-    print('DATABASE CREATED')
     yield app
 
 
