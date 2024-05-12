@@ -8,7 +8,7 @@ def test_home(client):
     assert res.status_code == 200
 
 
-def test_registration(client, app):
+def test_registration(client):
     response = client.post('/register',
                            data={"username": "temisann",
                                  "email": "temisann@gmail.com",
@@ -23,6 +23,7 @@ def test_registration(client, app):
                                  "zip": "123456",
                                  "password": "password"})
 
+    assert response.status_code == 200
     with app.app_context():
         assert User.query.count() == 1
         assert User.query.first().email == "temisann@gmail.com"
