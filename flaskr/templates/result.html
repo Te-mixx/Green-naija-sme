@@ -26,7 +26,7 @@
             </div>
             <div class="col-md-6">
                 <h1><strong> Your Carbon Footprint Summary </strong></h1>
-                    <p>The total carbon footprint for your business between (insert From date) to (insert To date) is <strong> {{ total_emission }} Tonnes of Co2e </strong> </p>
+                    <p>The total carbon footprint for your business between <strong> {{ from_date }} </strong> to <strong> {{ to_date }} </strong> is <strong> {{ total_emission }} Tonnes of Co2e </strong> </p>
                 <br>
                     {% if energy_percent > transport_percent %}
                     <p>With your Energy activity representing {{ energy_percent }} % of the business’s carbon footprint. The total cost of the activities for your business is <strong> {{ total_price }}</strong>  Click below for strategies to reduce your carbon footprint.</p>

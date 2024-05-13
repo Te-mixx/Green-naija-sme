@@ -185,8 +185,14 @@ async function submitForm(event) {
         event.preventDefault();
 
 
-        // var fromDate = $("#datepicker1").datepicker("getDate");
-        // var toDate = $("#datepicker2").datepicker("getDate");
+        var fromDate = $("#datepicker1").datepicker("getDate");
+        fromDate.setHours(fromDate.getHours() + 1);
+        var toDate = $("#datepicker2").datepicker("getDate");
+        toDate.setHours(toDate.getHours() + 1);
+
+        // Convert fromDate and toDate to strings in ISO 8601 format
+        var fromDateString = fromDate.toISOString().split('T')[0];
+        var toDateString = toDate.toISOString().split('T')[0];
 
         var formData = {
             motorVehicle: [],
@@ -197,7 +203,9 @@ async function submitForm(event) {
             electricity: [],
             generator: [],
             lpg: [],
-            firewood: []
+            firewood: [],
+            fromDateString: [{'fromDate': fromDateString}],
+            toDateString: [{"toDate": toDateString}]
         };
 
         var formFields = ['motorVehicle', 'motorbike', 'tricycle', 'flightDomestic', 'flightInternational', 'electricity', 'generator', 'lpg', 'firewood'];

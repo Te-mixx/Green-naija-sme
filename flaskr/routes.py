@@ -1,6 +1,6 @@
 from flaskr.models import User
 from flaskr import app, db, bcrypt, mail
-from flask import render_template, session, url_for, redirect, flash
+from flask import json, render_template, session, url_for, redirect, flash
 from flaskr.forms import (RegistrationForm,
                           LoginForm, UpdateAccountForm, RequestResetForm,
                           ResetPasswordForm)
@@ -83,6 +83,8 @@ def submit():
     category_labels = []
     category_emissions = []
     total_prices = []
+    from_date = data['fromDateString'][0]['fromDate']
+    to_date = data['toDateString'][0]['toDate']
     for category, category_data in data.items():
         labels, category_values, total_price = calculate_emissions(
             category_data)
@@ -104,6 +106,8 @@ def submit():
     session['category_emissions'] = category_emissions
     session['total_price'] = total_price
     session['total_emission'] = round(total_emission, 2)
+    session['from_date'] = from_date
+    session['to_date'] = to_date
     return redirect(url_for('result'))
 
 
@@ -155,6 +159,8 @@ def calculate_emissions(category_data):
 @app.route('/result')
 @login_required
 def result():
+    from_date = session.get('from_date', [])
+    to_date = session.get('to_date', [])
     category_labels = session.get('category_labels', [])
     category_emissions = session.get('category_emissions', [])
     total_price = session.get('total_price', [])
@@ -172,7 +178,9 @@ def result():
                            transportation_emission=transportation_emission,
                            energy_emission=energy_emission,
                            transport_percent=transport_percent,
-                           energy_percent=energy_percent)
+                           energy_percent=energy_percent,
+                           from_date=from_date,
+                           to_date=to_date)
 
 
 @app.route('/calculate', methods=['GET'])
