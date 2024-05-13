@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_login import current_user
-from wtforms import StringField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField
 from wtforms.validators import (DataRequired, Length,
                                 Email, EqualTo, ValidationError)
 from flaskr.models import User
@@ -19,7 +19,7 @@ class RegistrationForm(FlaskForm):
     address = StringField('Address', validators=[DataRequired()])
     city = StringField('City')
     state = StringField('State', validators=[DataRequired()])
-    zip_code = StringField('Zip')
+    zip_code = IntegerField('Zip')
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(),
