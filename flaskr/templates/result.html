@@ -25,7 +25,8 @@
                   </div>
             </div>
             <div class="col-md-6">
-                <h1><strong> Your Carbon Footprint Summary </strong></h1>
+                <h1><strong> {{ total_emission }}  Tonnes of Co2e </strong></h1>
+                <h2><strong> Your Carbon Footprint Summary </strong></h2>
                     <p>The total carbon footprint for your business between <strong> {{ from_date }} </strong> to <strong> {{ to_date }} </strong> is <strong> {{ total_emission }} Tonnes of Co2e </strong> </p>
                 <br>
                     {% if energy_percent > transport_percent %}
