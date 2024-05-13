@@ -1,5 +1,19 @@
 /* custom.css */
 
+#result {
+    border-radius: 10px;
+    padding: 10px; /* Add padding for spacing */
+    margin-bottom: 20px; /* Add margin for spacing between ul elements */
+    background-color: lightgreen;
+}
+
+#result2 {
+    border-radius: 10px;
+    padding: 10px; /* Add padding for spacing */
+    margin-bottom: 20px; /* Add margin for spacing between ul elements */
+    background-color: rgb(116, 193, 29);
+}
+
 .custom-primary-btn {
     color: green; 
     background-color: white;

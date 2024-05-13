@@ -261,6 +261,12 @@ def strategies():
     return render_template('strategies.html', title='Strategies')
 
 
+@app.route("/strategiess", methods=['GET'])
+@login_required
+def strategiess():
+    return render_template('strategies1.html', title='Strategies')
+
+
 @app.route("/logout")
 def logout():
     logout_user()
