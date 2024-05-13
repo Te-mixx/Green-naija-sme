@@ -1,6 +1,51 @@
 {% extends 'base.html' %}
 {% block content%} 
-    <h1>About page</h1>
-
+<h1>About </h1>
+<p> This web application was developed by <strong>Temisanren Ukubeyinje</strong> as partial fulfilment of the requirements of <strong>Staffordshire University</strong> for the degree of Master of Science. </p><br>
+<p> Emission factors used for carbon footprint calculations are: </p>
+<div class="container">
+    <h2>Activity Emission Factors</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Activity</th>
+          <th>Emission Factor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>100% Mineral Petrol (litres)</td>
+          <td>2.34</td>
+        </tr>
+        <tr>
+          <td>100% Mineral Diesel (litres)</td>
+          <td>2.70</td>
+        </tr>
+        <tr>
+          <td>LPG (litres)</td>
+          <td>1.56</td>
+        </tr>
+        <tr>
+          <td>Coal (tonnes)</td>
+          <td>43.03576</td>
+        </tr>
+        <tr>
+          <td>Electricity (kWh)</td>
+          <td>0.439</td>
+        </tr>
+        <tr>
+          <td>Domestic Flight (kilometre)</td>
+          <td>0.24587</td>
+        </tr>
+        <tr>
+          <td>International Flight (kilometre)</td>
+          <td>0.18362</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  </body>
+  </html>
 {% endblock content%}
 
