@@ -24,6 +24,14 @@ category_coefficients = {
 }
 
 
+def format_with_commas(value):
+    return "{:,.0f}".format(value)
+
+
+# Register the custom filter with Jinja
+app.jinja_env.filters['format_with_commas'] = format_with_commas
+
+
 @app.route("/")
 def home():
     return render_template('home.html', title="Home")
