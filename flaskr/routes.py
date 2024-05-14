@@ -1,12 +1,16 @@
-from flaskr.models import User
+from flaskr.models import Report, User
 from flaskr import app, db, bcrypt, mail
-from flask import json, render_template, session, url_for, redirect, flash
+from flask import json, render_template, session, url_for, redirect, flash, send_file
 from flaskr.forms import (RegistrationForm,
                           LoginForm, UpdateAccountForm, RequestResetForm,
                           ResetPasswordForm)
 from flask import request
 from flask_login import login_user, current_user, logout_user, login_required
 from flask_mail import Message
+from flask_weasyprint import HTML
+from io import BytesIO
+import uuid
+
 
 # Constants for fuel types and corresponding coefficients
 fuel_coefficients = {
@@ -179,16 +183,28 @@ def result():
         category_emissions)) * 100)
     energy_percent = int((energy_emission / sum(category_emissions)) * 100)
 
-    return render_template('result.html', labels=category_labels,
-                           data=category_emissions,
-                           total_price=total_price,
-                           total_emission=total_emission,
-                           transportation_emission=transportation_emission,
-                           energy_emission=energy_emission,
-                           transport_percent=transport_percent,
-                           energy_percent=energy_percent,
-                           from_date=from_date,
-                           to_date=to_date)
+    rendered_html = render_template('result.html', labels=category_labels, 
+                                    data=category_emissions,
+                                    total_price=total_price,
+                                    total_emission=total_emission,
+                                    transportation_emission=transportation_emission,
+                                    energy_emission=energy_emission,
+                                    transport_percent=transport_percent,
+                                    energy_percent=energy_percent,
+                                    from_date=from_date,
+                                    to_date=to_date)
+
+    pdf_data = HTML(string=rendered_html).write_pdf()
+
+    # Generate unique filename using UUID
+    filename = f'result_report_{uuid.uuid4()}.pdf'
+
+    # Save PDF to the database
+    new_report = Report(filename=filename, data=pdf_data, user_id=current_user.id)
+    db.session.add(new_report)
+    db.session.commit()
+
+    return rendered_html
 
 
 @app.route('/calculate', methods=['GET'])
@@ -211,9 +227,21 @@ def account():
         form.username.data = current_user.username
         form.email.data = current_user.email
     image_file = url_for('static',
-                         filename='profile_pics/' + current_user.image_file)
+                         filename='profile_pics/' + current_user.image_file) 
+    user_reports = Report.query.filter_by(user_id=current_user.id).all()
     return render_template('account.html',
-                           image_file=image_file, form=form, title="Account")
+                           image_file=image_file, form=form, title="Account", user_reports=user_reports)
+
+
+@app.route('/download_report/<int:report_id>', methods=['GET'])
+@login_required
+def download_report(report_id):
+    report = Report.query.get(report_id)
+    if report and report.user_id == current_user.id:
+        return send_file(BytesIO(report.data), as_attachment=True, download_name=report.filename)
+    else:
+        flash('Report not found or you do not have permission to access it.', 'error')
+        return redirect(url_for('result'))
 
 
 def send_reset_mail(user):

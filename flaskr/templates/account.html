@@ -43,6 +43,15 @@
             </div>
           </form>
 
+          <h1>User Reports</h1>
+          <ul>
+              {% for report in user_reports %}
+                  <li>
+                      <a href="{{ url_for('download_report', report_id=report.id) }}">{{ report.filename }}</a>
+                  </li>
+              {% endfor %}
+          </ul>
+
     </div>
 {% endblock content%}
 
