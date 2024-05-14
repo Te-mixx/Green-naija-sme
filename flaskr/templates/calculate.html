@@ -241,12 +241,12 @@ async function submitForm(event) {
         });
 
           if (response.ok) {
-      const redirectUrl = response.headers.get('Location') || '/result';
+              const redirectUrl = response.headers.get('Location') || '/result';
   
-      setTimeout(() => {
-          window.location.href = redirectUrl;
-      }, 1000);
-  } else {
+              setTimeout(() => {
+                  window.location.href = redirectUrl;
+              }, 1000);
+          } else {
     throw new Error('Failed to send data to server');
 }
 

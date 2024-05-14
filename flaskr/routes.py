@@ -120,7 +120,7 @@ def submit():
     session['total_emission'] = round(total_emission, 2)
     session['from_date'] = from_date
     session['to_date'] = to_date
-    return redirect(url_for('result'))
+    return {'message': 'data submitted successfully'}
 
 
 # the function handles dynamic input form correctly
@@ -183,7 +183,7 @@ def result():
         category_emissions)) * 100)
     energy_percent = int((energy_emission / sum(category_emissions)) * 100)
 
-    rendered_html = render_template('result.html', labels=category_labels, 
+    rendered_html = render_template('result.html', labels=category_labels,
                                     data=category_emissions,
                                     total_price=total_price,
                                     total_emission=total_emission,
